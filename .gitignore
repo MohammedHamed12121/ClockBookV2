@@ -1,0 +1,14 @@
+
+*.dll
+*.pdb
+*.db*
+
+
+Clockbook.mvc/bin
+Clockbook.mvc/obj
+Clockbook.mvc/wwwroot/lib
+Clockbook.mvc/Clockbook.Services/obj
+Clockbook.Services/bin
+Clockbook.Services/obj
+Clockbook.Domain/bin
+Clockbook.Domain/obj

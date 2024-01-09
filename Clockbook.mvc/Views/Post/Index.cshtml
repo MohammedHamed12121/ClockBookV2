@@ -1,0 +1,7 @@
+@model List<Post>
+
+@foreach(var post in Model)
+{
+    <partial name="_PostPartial" model="@post" />
+
+}

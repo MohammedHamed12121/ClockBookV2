@@ -1,0 +1,188 @@
+@model PersonalPageViewModel
+
+
+
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .profile-container {
+            background-color: #333;
+            border-radius: 8px;
+            overflow: hidden;
+            width: 900px;
+            margin: 20px auto;
+        }
+
+        .cover-photo {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: -50px auto 20px;
+            border: 5px solid #ff6600;
+        }
+
+        .user-info {
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .user-info h2 {
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            color: #aaa;
+            margin: 0;
+        }
+
+        .follow-button {
+            background-color: #ff6600;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .follow-button:hover {
+            background-color: #cc5500;
+        }
+
+        .chat-button {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .chat-button:hover {
+            background-color: #555;
+        }
+
+        .count-card {
+            display: flex;
+            justify-content: space-around;
+            background-color: #222;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 20px;
+            margin-bottom: 2px;
+        }
+
+        .count-card div {
+            text-align: center;
+        }
+
+        .count-card p {
+            color: #fff;
+            margin: 0;
+        }
+
+        .following {
+            padding: 20px;
+            background-color: #222;
+        }
+
+        .following h3 {
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .follower-slider {
+            display: flex;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #555 #333;
+        }
+
+        .follower-card {
+            flex: 0 0 100px;
+            margin-right: 10px;
+            background-color: #333;
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .follower-card img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 5px;
+        }
+
+        .follower-card p {
+            color: #aaa;
+            margin: 0;
+        }
+    </style>
+
+    <div class="profile-container">
+        <img class="cover-photo" src="cover-photo.jpg" alt="Cover Photo">
+        <img class="profile-image" src="profile-image.jpg" alt="Profile Image">
+        <div class="user-info">
+            <h2>@Model.User!.FirstName</h2>
+            <p>@Model.User!.UserName</p>
+            <p>@Model.User!.Job</p>
+            <button class="follow-button">Follow</button>
+            <button class="chat-button">Chat</button>
+        </div>
+        <div class="count-card">
+            <div>
+                <p>Followers</p>
+                <p>500</p>
+            </div>
+            <div>
+                <p>Following</p>
+                <p>200</p>
+            </div>
+        </div>
+        <div class="following">
+            <h3>Followers</h3>
+            <div class="follower-slider">
+                <div class="follower-card">
+                    <img src="follower1.jpg" alt="Follower 1">
+                    <p>Follower1</p>
+                </div>
+                <div class="follower-card">
+                    <img src="follower2.jpg" alt="Follower 2">
+                    <p>Follower2</p>
+                </div>
+                <!-- Add more follower cards as needed -->
+            </div>
+            <hr>
+        <h3>Post</h3>
+        @if(Model.Posts?.Count == 0 || Model.Posts is null)
+        {
+            <p> The user doesn't have posts yet</p>
+        }
+        else{
+
+            @foreach(var post in Model.Posts)
+            {
+                <partial name="_PostPartial" model="@post"/>
+            }
+        }
+        </div>
+
+    </div>
+
