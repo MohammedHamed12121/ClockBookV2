@@ -14,6 +14,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IPostRepository,PostRepositoy>();
+builder.Services.AddScoped<ILikeRepository,LikeRepository>();
 
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -49,6 +50,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

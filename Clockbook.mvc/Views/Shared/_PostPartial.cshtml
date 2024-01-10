@@ -1,119 +1,161 @@
 @model Post
+
+@{
+    bool liked = false;
+    foreach (var like in Model.Likes!)
+    {
+        if (like.UserId == User.GetUserId())
+        {
+            liked = true;
+        }
+        
+    }
+}
+
 <style>
     .post-container {
-            background-color: #282828;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
+        background-color: #282828;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
 
-        .post-header {
-            display: flex;
-            align-items: center;
-        }
+    .post-header {
+        display: flex;
+        align-items: center;
+    }
 
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
 
-        .user-post-info {
-            flex-grow: 1;
-        }
+    .user-post-info {
+        flex-grow: 1;
+    }
 
-        .user-name {
-            font-weight: bold;
-            margin: 0;
-            color: #ff8c00; /* Orange color */
-            text-decoration: none;
-        }
+    .user-name {
+        font-weight: bold;
+        margin: 0;
+        color: #ff8c00;
+        /* Orange color */
+        text-decoration: none;
+    }
 
-        .post-time {
-            margin: 0;
-            color: #808080; /* Light gray color */
-        }
+    .post-time {
+        margin: 0;
+        color: #808080;
+        /* Light gray color */
+    }
 
-        .post-content {
-            margin-top: 10px;
-        }
+    .post-content {
+        margin-top: 10px;
+    }
 
-        .post-actions {
-            margin-top: 15px;
-        }
-        .comment-section {
-            margin-top: 20px;
-        }
+    .post-actions {
+        margin-top: 15px;
+    }
 
-        .comment {
-            border-top: 1px solid #404040;
-            padding: 10px 0;
-        }
+    .comment-section {
+        margin-top: 20px;
+    }
 
-        .comment-user {
-            font-weight: bold;
-            color: #ff8c00;
-        }
+    .comment {
+        border-top: 1px solid #404040;
+        padding: 10px 0;
+    }
 
-        .comment-text {
-            margin-top: 5px;
-        }
+    .comment-user {
+        font-weight: bold;
+        color: #ff8c00;
+    }
 
-        button {
-            padding: 8px 15px;
-            margin-right: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+    .comment-text {
+        margin-top: 5px;
+    }
 
-        .like-button {
-            background-color: #ff8c00; /* Orange color */
-            color: #ffffff;
-        }
+    button {
+        padding: 8px 15px;
+        margin-right: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 
-        .comment-button {
-            background-color: #1a1a1a;
-            color: #ffffff;
-        }
+    .like-button {
+        background-color: #ff8c00;
+        /* Orange color */
+        color: #ffffff;
+    }
 
-        .share-button {
-            background-color: #1a1a1a;
-            color: #ffffff;
-        }
+    .comment-button {
+        background-color: #1a1a1a;
+        color: #ffffff;
+    }
+
+    .share-button {
+        background-color: #1a1a1a;
+        color: #ffffff;
+    }
 </style>
 
 <div class="post-container">
-        <div class="post-header">
-            <img class="user-avatar" src="avatar.jpg" alt="User Avatar">
-            <div class="user-post-info">
-                <a class="user-name"
-                    asp-area="" asp-controller="User" asp-action="PersonalPage" asp-route-id="@Model.UserId"
-                >@Model.User!.FirstName @Model.User!.LastName</a>
-                <p class="post-time">@Model.CreatedAt</p>
-            </div>
-        </div>
-        <div class="post-content">
-            <p>@Model.Content</p>
-        </div>
-        <div class="post-actions">
-            <button class="like-button">Like</button>
-            <button class="comment-button">Comment</button>
-            <button class="share-button">Share</button>
-        </div>
-
-        @* TODO: Make the comment section *@
-        <div class="comment-section">
-            @foreach(var comment in Model.Comments!)
-            {
-                <div class="comment">
-                    <a 
-                        asp-area="" asp-controller="User" asp-action="PersonalPage" asp-route-id="@comment.UserId"
-                    class="comment-user">@comment.User!.FirstName @comment.User!.LastName</a>
-                    <p class="comment-text">@comment.Content</p>
-                </div>
-            }
-            <!-- Add more comments as needed -->
+    <div class="post-header">
+        <img class="user-avatar" src="avatar.jpg" alt="User Avatar">
+        <div class="user-post-info">
+            <a class="user-name" asp-area="" asp-controller="User" asp-action="PersonalPage"
+                asp-route-id="@Model.UserId">@Model.User!.FirstName @Model.User!.LastName</a>
+            <p class="post-time">@Model.CreatedAt</p>
         </div>
     </div>
+    <div class="post-content">
+        <p>@Model.Content</p>
+    </div>
+    <div style="font-size: small;">
+        @* @if (Model.Likes.Count != 0 && liked)
+        {
+            <p>you and  @(Model.Likes.Count()-1) more liked this post</p>
+        }
+        else if (Model.Likes.Count != 0)
+        {
+            <p> @Model.Likes.Count() liked this post</p>
+        }
+        else
+        {
+
+        } *@
+
+        @(liked ? "you and " : "") @(Model.Likes.Count == 0 ? "" : $"{Model.Likes.Count -1} liked this post") 
+    </div>
+    <div class="post-actions">
+        <form asp-controller="Post" asp-action="Like" asp-route-postId="@Model.Id" method="post"
+            style="display: inline;">
+            @if (liked)
+            {
+                <button class="like-button">dislike</button>
+            }
+            else
+            {
+                
+                <button class="like-button">Like</button>
+            }
+        </form>
+        <button class="comment-button">Comment</button>
+        <button class="share-button">Share</button>
+    </div>
+
+    @* TODO: Make the comment section *@
+    <div class="comment-section">
+        @foreach (var comment in Model.Comments!)
+        {
+            <div class="comment">
+                <a asp-area="" asp-controller="User" asp-action="PersonalPage" asp-route-id="@comment.UserId"
+                    class="comment-user">@comment.User!.FirstName @comment.User!.LastName</a>
+                <p class="comment-text">@comment.Content</p>
+            </div>
+        }
+        <!-- Add more comments as needed -->
+    </div>
+</div>
