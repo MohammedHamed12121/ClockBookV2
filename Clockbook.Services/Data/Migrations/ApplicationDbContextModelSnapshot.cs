@@ -153,6 +153,27 @@ namespace Clockbook.Services.Data.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("Clockbook.Domain.Models.Like", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PostId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Likes");
+                });
+
             modelBuilder.Entity("Clockbook.Domain.Models.Post", b =>
                 {
                     b.Property<string>("Id")
@@ -326,6 +347,21 @@ namespace Clockbook.Services.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Clockbook.Domain.Models.Like", b =>
+                {
+                    b.HasOne("Clockbook.Domain.Models.Post", "Post")
+                        .WithMany("Likes")
+                        .HasForeignKey("PostId");
+
+                    b.HasOne("Clockbook.Domain.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Clockbook.Domain.Models.Post", b =>
                 {
                     b.HasOne("Clockbook.Domain.Models.AppUser", "User")
@@ -394,6 +430,8 @@ namespace Clockbook.Services.Data.Migrations
             modelBuilder.Entity("Clockbook.Domain.Models.Post", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Likes");
                 });
 #pragma warning restore 612, 618
         }

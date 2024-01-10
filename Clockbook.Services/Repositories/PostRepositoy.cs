@@ -22,6 +22,7 @@ namespace Clockbook.Services.Repositories
         {
             return await _context.Posts
                             .Include(p => p.User)
+                            .Include(p => p.Likes)
                             .Include(p => p.Comments)
                                 .ThenInclude(c => c.User)
                             .AsNoTracking()
@@ -33,6 +34,7 @@ namespace Clockbook.Services.Repositories
             return await _context.Posts
                                 .Where(p => p.UserId == id)
                                 .Include(p => p.User)
+                                .Include(p => p.Likes)
                                 .Include(p => p.Comments)
                                     .ThenInclude(c => c.User)
                                 .AsNoTracking() 
