@@ -5,8 +5,7 @@
 <style>
     .card-container {
         font-family: Arial, sans-serif;
-    @*background-color:#1a1a1a;*@
-        margin: 0;
+    @*background-color:#1a1a1a;*@margin: 0;
         padding: 20px;
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -42,19 +41,6 @@
         margin: 0;
     }
 
-    .social-icons {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-    }
-
-    .social-icons a {
-        margin: 0 10px;
-        color: #fff;
-        text-decoration: none;
-        font-size: 1.2em;
-    }
-
     .add-friend-btn {
         background-color: #1a1a1a;
         color: #fff;
@@ -71,34 +57,23 @@
     }
 </style>
 
-<div class="container">
-    <div class="row">
-        <div class="col-2"> side bar</div>
+<div class="col-10">
 
-
-        <div class="col-10">
-
-            <div class="card-container ">
-                @foreach (var user in Model)
-                {<a asp-area="" asp-controller="User" asp-action="PersonalPage" asp-route-id="@user.Id" style="text-decoration: none;" class="add-friend-btn">
-                    <div class="user-card">
-                        <img src="https://placehold.co/600x400" alt="Profile Image">
-                        <div class="user-info">
-                            <h4>@user.FirstName @user.LastName</h4>
-                            <p>@user.Job</p>
-                            @* TODO: Add the quote here *@
-                            @* <p>Location: City, Country</p> *@
-                        </div>
-
-                        <button class="add-friend-btn">Follow</button>
+    <div class="card-container ">
+        @foreach (var user in Model)
+        {
+            <a asp-area="" asp-controller="User" asp-action="PersonalPage" asp-route-id="@user.Id"
+                style="text-decoration: none;" class="add-friend-btn">
+                <div class="user-card">
+                    <img src="https://placehold.co/600x400" alt="Profile Image">
+                    <div class="user-info">
+                        <h4>@user.FirstName @user.LastName</h4>
+                        <p>@user.Job</p>
                     </div>
-                    </a>
 
-                }
-
-
-            </div>
-        @* </div> *@
-
+                    <button class="add-friend-btn">Follow</button>
+                </div>
+            </a>
+        }
     </div>
 </div>

@@ -8,7 +8,7 @@
         {
             liked = true;
         }
-        
+
     }
 }
 
@@ -113,10 +113,11 @@
     <div class="post-content">
         <p>@Model.Content</p>
     </div>
-    <div style="font-size: small;">
-        @* @if (Model.Likes.Count != 0 && liked)
+    <div style="font-size: small; display: flex; justify-content:space-between">
+        @if (Model.Likes.Count != 0 && liked)
         {
-            <p>you and  @(Model.Likes.Count()-1) more liked this post</p>
+            <p>you @(Model.Likes.Count() - 1 == 0 ? "liked this post" : $"and {Model.Likes.Count() - 1} more liked this post ")
+            </p>
         }
         else if (Model.Likes.Count != 0)
         {
@@ -125,9 +126,10 @@
         else
         {
 
-        } *@
+        }
 
-        @(liked ? "you and " : "") @(Model.Likes.Count == 0 ? "" : $"{Model.Likes.Count -1} liked this post") 
+        <p>There are @(Model.Comments!.Count != 0 ? Model.Comments.Count : "no") comment on this post</p>
+
     </div>
     <div class="post-actions">
         <form asp-controller="Post" asp-action="Like" asp-route-postId="@Model.Id" method="post"
@@ -138,24 +140,50 @@
             }
             else
             {
-                
+
                 <button class="like-button">Like</button>
             }
         </form>
-        <button class="comment-button">Comment</button>
+        <button class="comment-button" data-toggle="modal" data-target="#myModal-@Model.Id">Comment</button>
         <button class="share-button">Share</button>
     </div>
+</div>
 
-    @* TODO: Make the comment section *@
-    <div class="comment-section">
-        @foreach (var comment in Model.Comments!)
-        {
-            <div class="comment">
-                <a asp-area="" asp-controller="User" asp-action="PersonalPage" asp-route-id="@comment.UserId"
-                    class="comment-user">@comment.User!.FirstName @comment.User!.LastName</a>
-                <p class="comment-text">@comment.Content</p>
+
+<div class="modal" id="myModal-@Model.Id" >
+    @* <form asp-controller="Account" asp-action="Logout" method="get"> *@
+        <div class="modal-dialog" >
+            <div class="modal-content" style="background-color: black;">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Comments</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    @if(@Model.Comments is null || @Model.Comments.Count == 0 )
+                    {
+                        <p> There is no comment yet</p>
+                    }
+                    @foreach (var comment in Model.Comments!)
+                    {
+                        <partial name="_CommentPartial" model="@comment" />
+                    }
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <form asp-controller="Post" asp-action="Comment" method="post">
+                        <input type="hidden" value="@Model.Id" name="PostId" id="PostId">
+                        <input type="hidden" value="@User.GetUserId()" name="UserId" id="UserId">
+                        <input type="text" asp-for="Content" placeholder="Add comment">
+                        <button class="">Add</button>
+                    </form>
+                </div>
+
             </div>
-        }
-        <!-- Add more comments as needed -->
-    </div>
+        </div>
+    @* </form> *@
 </div>

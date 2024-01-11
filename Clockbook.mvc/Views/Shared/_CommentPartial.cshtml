@@ -1,0 +1,11 @@
+@model Comment
+
+
+
+<div class="comment">
+    <a asp-area="" asp-controller="User" asp-action="PersonalPage" asp-route-id="@Model.UserId"
+        class="comment-user">@Model.User!.FirstName @Model.User!.LastName</a>
+    <p class="comment-text">@Model.Content</p>
+</div>
+
+

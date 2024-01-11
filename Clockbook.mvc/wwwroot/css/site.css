@@ -18,8 +18,9 @@ html {
 }
 
 body {
+  
+  font-family:  sans-serif;
   margin-bottom: 60px;
   background-color: #1a1a1a;
   color: white;
-
 }
