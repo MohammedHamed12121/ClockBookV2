@@ -23,20 +23,51 @@ namespace Clockbook.Services.Repositories
             throw new NotImplementedException();
         }
 
+        public bool AddFollow(Follow follow)
+        {
+            _context.Follows.Add(follow);
+            return Save();
+        }
+
+        public bool DeleteFollow(Follow follow)
+        {
+            _context.Follows.Remove(follow);
+            return Save();
+        }
+
         public bool Delete(AppUser user)
         {
-            _context.Remove(user);
+            _context.Users.Remove(user);
             return Save();
+        }
+
+        public async Task<Follow> IsUserFollow(string userId, string followingId)
+        {
+            return await _context.Follows
+                    .Where(f => f.UserId == userId && f.FollowingId == followingId)
+                    .FirstOrDefaultAsync();
+        }
+        public async Task<List<Follow>> GetAllFollowers(string userId)
+        {
+            return await _context.Follows
+                    .Where(f => f.FollowingId == userId)
+                    .Include(f => f.User)
+                    .AsNoTracking()
+                    .ToListAsync();
+        }
+
+        public async Task<List<Follow>> GetAllFollowings(string userId)
+        {
+            return await _context.Follows
+                    .Where(f => f.UserId == userId)
+                    .Include(f => f.Following)
+                    .AsNoTracking()
+                    .ToListAsync();
         }
 
         public async Task<IEnumerable<AppUser>> GetAllUsersAsync()
         {
             return await _context.Users.Include(u => u.Address).ToListAsync();
-        }
-
-        public async Task<IEnumerable<AppUser>> GetAllUsersByCityAsyncWithNoTracking(string city)
-        {
-            return await _context.Users.Where(u => u.Address.City == city).AsNoTracking().ToListAsync();
         }
 
         public async Task<AppUser?> GetUserByIdAsync(string id)

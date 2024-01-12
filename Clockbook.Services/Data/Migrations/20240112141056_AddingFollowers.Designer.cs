@@ -3,6 +3,7 @@ using System;
 using Clockbook.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,12 +11,29 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clockbook.Services.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240112141056_AddingFollowers")]
+    partial class AddingFollowers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
+
+            modelBuilder.Entity("AppUserAppUser", b =>
+                {
+                    b.Property<string>("FollowersId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FollowingId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("FollowersId", "FollowingId");
+
+                    b.HasIndex("FollowingId");
+
+                    b.ToTable("AppUserAppUser");
+                });
 
             modelBuilder.Entity("Clockbook.Domain.Models.Address", b =>
                 {
@@ -152,21 +170,6 @@ namespace Clockbook.Services.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("Clockbook.Domain.Models.Follow", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FollowingId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("UserId", "FollowingId");
-
-                    b.HasIndex("FollowingId");
-
-                    b.ToTable("Follows");
                 });
 
             modelBuilder.Entity("Clockbook.Domain.Models.Like", b =>
@@ -339,6 +342,21 @@ namespace Clockbook.Services.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("AppUserAppUser", b =>
+                {
+                    b.HasOne("Clockbook.Domain.Models.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("FollowersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Clockbook.Domain.Models.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("FollowingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Clockbook.Domain.Models.AppUser", b =>
                 {
                     b.HasOne("Clockbook.Domain.Models.Address", "Address")
@@ -359,25 +377,6 @@ namespace Clockbook.Services.Data.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("Post");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Clockbook.Domain.Models.Follow", b =>
-                {
-                    b.HasOne("Clockbook.Domain.Models.AppUser", "Following")
-                        .WithMany()
-                        .HasForeignKey("FollowingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Clockbook.Domain.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Following");
 
                     b.Navigation("User");
                 });

@@ -11,7 +11,11 @@ namespace Clockbook.Domain.Interfaces
         Task<IEnumerable<AppUser>> GetAllUsersAsync();
         Task<AppUser?> GetUserByIdAsync(string id);
         Task<AppUser?> GetUserByIdAsyncWithNoTracking(string id);
-        Task<IEnumerable<AppUser>> GetAllUsersByCityAsyncWithNoTracking (string city);
+        bool AddFollow(Follow follow);
+        bool DeleteFollow(Follow follow);
+        Task<Follow> IsUserFollow(string userId, string followingId);
+        Task<List<Follow>> GetAllFollowers(string userId);
+        Task<List<Follow>>GetAllFollowings(string userId);
         bool Add(AppUser user);
 
         bool Update(AppUser user);

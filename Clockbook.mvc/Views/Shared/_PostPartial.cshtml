@@ -56,6 +56,8 @@
 
     .post-actions {
         margin-top: 15px;
+        display: flex;
+        justify-content: space-between;
     }
 
     .comment-section {
@@ -144,13 +146,13 @@
                 <button class="like-button">Like</button>
             }
         </form>
-        <button class="comment-button" data-toggle="modal" data-target="#myModal-@Model.Id">Comment</button>
+        <button class="comment-button" data-toggle="modal" data-target="#CommentModel-@Model.Id">Comment</button>
         <button class="share-button">Share</button>
     </div>
 </div>
 
 
-<div class="modal" id="myModal-@Model.Id" >
+<div class="modal" id="CommentModel-@Model.Id" >
     @* <form asp-controller="Account" asp-action="Logout" method="get"> *@
         <div class="modal-dialog" >
             <div class="modal-content" style="background-color: black;">

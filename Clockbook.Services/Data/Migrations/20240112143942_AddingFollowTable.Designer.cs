@@ -3,6 +3,7 @@ using System;
 using Clockbook.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clockbook.Services.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240112143942_AddingFollowTable")]
+    partial class AddingFollowTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
@@ -156,13 +159,19 @@ namespace Clockbook.Services.Data.Migrations
 
             modelBuilder.Entity("Clockbook.Domain.Models.Follow", b =>
                 {
-                    b.Property<string>("UserId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FollowerId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FollowingId")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("UserId", "FollowingId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("FollowerId");
 
                     b.HasIndex("FollowingId");
 
@@ -365,21 +374,17 @@ namespace Clockbook.Services.Data.Migrations
 
             modelBuilder.Entity("Clockbook.Domain.Models.Follow", b =>
                 {
+                    b.HasOne("Clockbook.Domain.Models.AppUser", "Follower")
+                        .WithMany()
+                        .HasForeignKey("FollowerId");
+
                     b.HasOne("Clockbook.Domain.Models.AppUser", "Following")
                         .WithMany()
-                        .HasForeignKey("FollowingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FollowingId");
 
-                    b.HasOne("Clockbook.Domain.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Follower");
 
                     b.Navigation("Following");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Clockbook.Domain.Models.Like", b =>

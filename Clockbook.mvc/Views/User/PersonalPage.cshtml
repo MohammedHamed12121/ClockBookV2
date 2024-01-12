@@ -8,7 +8,6 @@
             background-color: #333;
             border-radius: 8px;
             overflow: hidden;
-            width: 900px;
             margin: 20px auto;
         }
 
@@ -113,6 +112,7 @@
             overflow: hidden;
             text-align: center;
             padding: 10px;
+            text-decoration: none;
         }
 
         .follower-card img {
@@ -133,33 +133,40 @@
         <img class="profile-image" src="profile-image.jpg" alt="Profile Image">
         <div class="user-info">
             <h2>@Model.User!.FirstName</h2>
-            <p>@Model.User!.UserName</p>
+            <p>@Model.User!.Email</p>
             <p>@Model.User!.Job</p>
-            <button class="follow-button">Follow</button>
+            <form asp-controller="User" asp-action="Follow" method="post" style="display: inline;">
+                <input type="hidden" value="@Model.User.Id"  name="FollowingId" id="FollowingId">
+                <input type="hidden" value="@User.GetUserId()"  name="UserId" id="UserId">
+
+                <button class="follow-button">@(Model.Following ? "UnFollow" : "Follow")</button>
+            </form>
             <button class="chat-button">Chat</button>
         </div>
+
         <div class="count-card">
-            <div>
+            <div data-toggle="modal" data-target="#FollowerModel">
                 <p>Followers</p>
-                <p>500</p>
+                <p>@Model.UserFollowers?.Count</p>
             </div>
-            <div>
+            <div data-toggle="modal" data-target="#FollowingModel">
                 <p>Following</p>
-                <p>200</p>
+                <p >@Model.UserFollowing?.Count</p>
             </div>
         </div>
+
         <div class="following">
             <h3>Followers</h3>
             <div class="follower-slider">
-                <div class="follower-card">
-                    <img src="follower1.jpg" alt="Follower 1">
-                    <p>Follower1</p>
-                </div>
-                <div class="follower-card">
-                    <img src="follower2.jpg" alt="Follower 2">
-                    <p>Follower2</p>
-                </div>
-                <!-- Add more follower cards as needed -->
+                @foreach(var follower in Model.UserFollowers!)
+                {
+                    @* <p>@follower.Follower.FirstName</p> *@
+                    <a asp-area="" asp-controller="User" asp-action="PersonalPage"
+                            asp-route-id="@follower.UserId" class="follower-card">
+                        <img src="follower1.jpg" alt="Follower 1">
+                        <p>@follower.User!.Email</p>
+                    </a>
+                }
             </div>
             <hr>
         <h3>Post</h3>
@@ -178,3 +185,64 @@
 
     </div>
 
+
+<div class="modal" id="FollowingModel" >
+        <div class="modal-dialog" >
+            <div class="modal-content" style="background-color: black;">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Following</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    @if(@Model.UserFollowing is null || @Model.UserFollowing.Count == 0 )
+                    {
+                        <p> There is no one follow yet</p>
+                    }
+                    @foreach (var following in Model.UserFollowing!)
+                    {
+                        @* <partial name="_CommentPartial" model="@following" /> *@
+                        <a asp-area="" asp-controller="User" asp-action="PersonalPage"
+                            asp-route-id="@following.Following.Id">
+                        <p> @following.Following!.FirstName</p>
+                        </a>
+                        <hr>
+                    }
+                </div>
+            </div>
+        </div>
+</div>
+
+
+<div class="modal" id="FollowerModel" >
+        <div class="modal-dialog" >
+            <div class="modal-content" style="background-color: black;">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Followers</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    @if(@Model.UserFollowers is null || @Model.UserFollowers.Count == 0 )
+                    {
+                        <p> he is not following anyone yet</p>
+                    }
+                    @foreach (var follower in Model.UserFollowers!)
+                    {
+                        @* <partial name="_CommentPartial" model="@following" /> *@
+                        <a asp-area="" asp-controller="User" asp-action="PersonalPage"
+                            asp-route-id="@follower.User.Id">
+                            <p> @(follower.User!.FirstName ?? follower.User!.Email)</p>
+                        </a>
+                        <hr>
+                    }
+                </div>
+            </div>
+        </div>
+</div>

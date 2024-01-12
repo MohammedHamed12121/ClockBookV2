@@ -3,6 +3,7 @@ using System;
 using Clockbook.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clockbook.Services.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240112142028_AddingUserFollowers")]
+    partial class AddingUserFollowers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
@@ -51,6 +54,9 @@ namespace Clockbook.Services.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("AddressId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AppUserId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -120,6 +126,8 @@ namespace Clockbook.Services.Data.Migrations
                     b.HasIndex("AddressId")
                         .IsUnique();
 
+                    b.HasIndex("AppUserId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -152,21 +160,6 @@ namespace Clockbook.Services.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("Clockbook.Domain.Models.Follow", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FollowingId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("UserId", "FollowingId");
-
-                    b.HasIndex("FollowingId");
-
-                    b.ToTable("Follows");
                 });
 
             modelBuilder.Entity("Clockbook.Domain.Models.Like", b =>
@@ -345,6 +338,10 @@ namespace Clockbook.Services.Data.Migrations
                         .WithOne("AppUser")
                         .HasForeignKey("Clockbook.Domain.Models.AppUser", "AddressId");
 
+                    b.HasOne("Clockbook.Domain.Models.AppUser", null)
+                        .WithMany("Followers")
+                        .HasForeignKey("AppUserId");
+
                     b.Navigation("Address");
                 });
 
@@ -359,25 +356,6 @@ namespace Clockbook.Services.Data.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("Post");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Clockbook.Domain.Models.Follow", b =>
-                {
-                    b.HasOne("Clockbook.Domain.Models.AppUser", "Following")
-                        .WithMany()
-                        .HasForeignKey("FollowingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Clockbook.Domain.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Following");
 
                     b.Navigation("User");
                 });
@@ -460,6 +438,11 @@ namespace Clockbook.Services.Data.Migrations
             modelBuilder.Entity("Clockbook.Domain.Models.Address", b =>
                 {
                     b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("Clockbook.Domain.Models.AppUser", b =>
+                {
+                    b.Navigation("Followers");
                 });
 
             modelBuilder.Entity("Clockbook.Domain.Models.Post", b =>

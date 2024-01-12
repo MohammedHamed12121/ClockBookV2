@@ -10,5 +10,9 @@ namespace Clockbook.Services.ViewModels
     {
         public AppUser? User { get; set; }
         public List<Post>? Posts { get; set; }
+        public List<Follow>? UserFollowers { get; set; }
+        public List<Follow>? UserFollowing { get; set; }
+        public bool Following { get; set; }
+
     }
 }
